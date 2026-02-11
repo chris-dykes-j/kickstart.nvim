@@ -614,7 +614,7 @@ require('lazy').setup({
       -- You can press `g?` for help in this menu.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'lua_ls', -- Lua Language server
+        'lua-language-server', -- Lua Language server
         'stylua', -- Used to format Lua code
         -- You can add other tools here that you want Mason to install
       })
@@ -788,26 +788,54 @@ require('lazy').setup({
     },
   },
 
+  --Colour Schemes
   { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'olivercederborg/poimandres.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
+      require('poimandres').setup {
+        groups = {
+          border = 'background2',
+          panel = 'background2',
         },
       }
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'poimandres'
+      vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+      vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+      vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'NONE' })
     end,
+  },
+
+  -- Zen Mode
+  {
+    'folke/zen-mode.nvim',
+    opts = {
+      window = {
+        backdrop = 1,
+        width = 80,
+        height = 0.9,
+        options = {
+          number = false,
+        },
+      },
+      on_open = function(win)
+        vim.opt.linebreak = true
+        vim.cmd 'set spell spelllang=en_gb'
+      end,
+      on_close = function()
+        vim.opt.linebreak = false
+        vim.cmd 'set nospell'
+      end,
+    },
   },
 
   -- Highlight todo, notes, etc in comments
