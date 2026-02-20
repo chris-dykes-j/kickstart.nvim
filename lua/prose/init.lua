@@ -27,7 +27,7 @@ end
 local function do_the_regex_bro(line, tags)
   -- e.g. "By the way," she said, "regex sucks."
   local pattern_one = [[\v(.{-}[,?!])\s+(\w+\s+]] .. tags .. [[[\.,]|]] .. tags .. [[\s+\w+[\.,])\s+(.*)]]
-  -- e.g. He sighed and said, "I know Jane. I know."
+  -- e.g. He sighed and said, "I know, Jane. I know."
   local pattern_two = [[\v(.{-}(]] .. tags .. [[),)\s+(.*)]]
   -- e.g. "Then why do you still use it?" she asked.
   local pattern_three = [[\v(.{-}[,?!])\s+(\w+\s+]] .. tags .. [[|]] .. tags .. [[\s+\w+)]]
