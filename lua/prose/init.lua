@@ -24,9 +24,22 @@ local function get_tags()
   return pattern
 end
 
-local function do_the_regex_bro(line, pattern)
-  local new_line = vim.fn.substitute(line, pattern, 'test', 'g')
-  vim.api.nvim_set_current_line(new_line)
+local function do_the_regex_bro(line, tags)
+  local pattern_one = [[\v(.{-}[,?!])\s+(\w+\s+]] .. tags .. [[[\.,]|]] .. tags .. [[\s+\w+[\.,])\s+(.*)]]
+  local pattern_two = [[\v(.{-}(]] .. tags .. [[),)\s+(.*)]]
+  local pattern_three = [[\v(.{-}[,?!])\s+(\w+\s+]] .. tags .. [[|]] .. tags .. [[\s+\w+)]]
+
+  local new_line = line
+
+  if vim.fn.match(line, pattern_one) ~= -1 then
+    new_line = vim.fn.substitute(line, pattern_one, [["\1" \2 "\5"]], 'g')
+  elseif vim.fn.match(line, pattern_two) ~= -1 then
+    new_line = vim.fn.substitute(line, pattern_two, [[\1 "\4"]], 'g')
+  elseif vim.fn.match(line, pattern_three) ~= -1 then
+    new_line = vim.fn.substitute(line, pattern_three, [["\1" \2]], 'g')
+  end
+
+  return new_line
 end
 
 -- Add quotation marks.
@@ -37,7 +50,8 @@ function M:add_quotations()
   local line = vim.api.nvim_get_current_line()
 
   if vim.fn.match(line, pattern) ~= -1 then
-    do_the_regex_bro(line, pattern)
+    local new_line = do_the_regex_bro(line, tags)
+    vim.api.nvim_set_current_line(new_line)
   else
     vim.api.nvim_set_current_line('"' .. line .. '"')
   end
