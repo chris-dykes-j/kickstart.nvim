@@ -1,6 +1,8 @@
 local M = {}
 
-function M.add_emdash()
+--- Adds the emdash when inputting three hyphens in a row.
+--- AI generated.
+local function add_emdash()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local row, col = cursor[1], cursor[2]
   local line = vim.api.nvim_get_current_line()
@@ -18,7 +20,7 @@ function M.add_emdash()
 end
 
 function M.setup()
-  vim.keymap.set('i', '-', function() M.add_emdash() end, { desc = 'Emdash shortcut', silent = true })
+  vim.keymap.set('i', '-', function() add_emdash() end, { desc = 'Emdash shortcut', silent = true })
 end
 
 return M

@@ -1,6 +1,7 @@
 local M = {}
 
--- Read the tags from the file.
+--- Read the tags from the file.
+--- @return string|nil
 local function get_tags()
   local dir = vim.fs.dirname(debug.getinfo(1, 'S').source:sub(2))
   local filename = vim.fs.joinpath(dir, 'tags.txt')
@@ -24,15 +25,19 @@ local function get_tags()
   return pattern
 end
 
+--- Applies regex patterns to the given line.
+--- @param line string
+--- @param tags string
+--- @return string
 local function do_the_regex_bro(line, tags)
-  -- e.g. "By the way," she said, "regex sucks."
+  -- "You should know by now," she said, "that regex is dog water."
   local pattern_one = [[\v(.{-}[,?!])\s+(\w+\s+]] .. tags .. [[[\.,]|]] .. tags .. [[\s+\w+[\.,])\s+(.*)]]
-  -- e.g. He sighed and said, "I know, Jane. I know."
+  -- He sighed and said, "I know, Jane. I know."
   local pattern_two = [[\v(.{-}(]] .. tags .. [[),)\s+(.*)]]
-  -- e.g. "Then why do you still use it?" she asked.
+  -- "Then why do you insist on using it?" she asked.
   local pattern_three = [[\v(.{-}[,?!])\s+(\w+\s+]] .. tags .. [[|]] .. tags .. [[\s+\w+)]]
-
-  local new_line = line
+  -- "I don't."
+  local new_line = '"' .. line .. '"'
 
   if vim.fn.match(line, pattern_one) ~= -1 then
     new_line = vim.fn.substitute(line, pattern_one, [["\1" \2 "\5"]], 'g')
@@ -45,11 +50,12 @@ local function do_the_regex_bro(line, tags)
   return new_line
 end
 
--- Add quotation marks.
+--- Add quotation marks to line.
 function M:add_quotations()
   local tags = get_tags()
-  local pattern = [[\v]] .. [[(\w+\s+]] .. tags .. [[)|(]] .. tags .. [[\s+\w)]]
+  if tags == nil then return end -- Not ideal, but w/e.
 
+  local pattern = [[\v]] .. [[(\w+\s+]] .. tags .. [[)|(]] .. tags .. [[\s+\w)]]
   local line = vim.api.nvim_get_current_line()
 
   if vim.fn.match(line, pattern) ~= -1 then
