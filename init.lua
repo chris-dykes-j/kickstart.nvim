@@ -154,7 +154,7 @@ vim.o.splitbelow = true
 vim.o.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.o.cursorline = true
+vim.o.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
@@ -549,6 +549,7 @@ require('lazy').setup({
           --    See `:help CursorHold` for information about when this is executed
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
+          --[[
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client:supports_method('textDocument/documentHighlight', event.buf) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
@@ -580,6 +581,7 @@ require('lazy').setup({
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
             map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
           end
+          ]]
         end,
       })
 
@@ -657,13 +659,12 @@ require('lazy').setup({
     end,
   },
 
-  --[[ Harpoon plugin
+  --Harpoon plugin
   {
     'ThePrimeagen/harpoon',
     branch = 'harpoon2',
     dependencies = { 'nvim-lua/plenary.nvim' },
   },
-  --]]
 
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -847,6 +848,16 @@ require('lazy').setup({
     },
   },
 
+  -- Lua
+  {
+    'folke/twilight.nvim',
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+  },
+
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -952,3 +963,22 @@ require('lazy').setup({
 -- Tabs
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
+
+-- View menu
+vim.keymap.set('n', '<leader>vf', vim.cmd.Ex)
+
+-- Harpoon set up
+local harpoon = require 'harpoon'
+harpoon:setup()
+
+vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Add to harpoon list.' })
+vim.keymap.set('n', '<C-e>', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+vim.keymap.set('n', '<C-h>', function() harpoon:list():select(1) end)
+vim.keymap.set('n', '<C-t>', function() harpoon:list():select(2) end)
+vim.keymap.set('n', '<C-n>', function() harpoon:list():select(3) end)
+vim.keymap.set('n', '<C-s>', function() harpoon:list():select(4) end)
+
+-- Personal Prose Plugin
+local prose = require 'prose'
+vim.keymap.set('n', '<C-q>', function() prose:add_quotations() end, { desc = 'Add quotation marks to current line' })
