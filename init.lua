@@ -909,6 +909,11 @@ require('lazy').setup({
     end,
   },
 
+  {
+    dir = '~/plugins/prose',
+    name = 'prose',
+  },
+
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -979,17 +984,12 @@ vim.keymap.set('n', '<C-t>', function() harpoon:list():select(2) end)
 vim.keymap.set('n', '<C-n>', function() harpoon:list():select(3) end)
 vim.keymap.set('n', '<C-s>', function() harpoon:list():select(4) end)
 
--- Personal Prose Plugin
+-- Prose Plugin Setup
 local prose = require 'prose'
-vim.keymap.set('n', '<C-q>', function() prose:add_quotations() end, { desc = 'Add quotation marks to current line' })
-vim.keymap.set('i', '<C-q>', function() prose:add_quotations() end, { desc = 'Add quotation marks to current line' })
-vim.keymap.set('x', 'q', function() prose:add_quotes_to_selection() end, { desc = 'Add quotation marks to the current selection line by line' })
 
--- Auto Emdash
-local em_dash = require 'emdash'
-em_dash.setup()
+vim.keymap.set('n', '<C-q>', function() prose.quote:add_quotations() end, { desc = 'Add quotation marks to current line' })
+vim.keymap.set('i', '<C-q>', function() prose.quote:add_quotations() end, { desc = 'Add quotation marks to current line' })
+vim.keymap.set('x', 'q', function() prose.quote:add_quotes_to_selection() end, { desc = 'Add quotation marks to the current selection line by line' })
 
--- Italicize
-local italics = require 'italics'
-vim.keymap.set('n', '<C-i>', function() italics:italicize() end, { desc = 'Italicize current line' })
-vim.keymap.set('i', '<C-i>', function() italics:italicize() end, { desc = 'Italicize current line' })
+vim.keymap.set('n', '<C-i>', function() prose.italicize:italicize() end, { desc = 'Italicize current line' })
+vim.keymap.set('i', '<C-i>', function() prose.italicize:italicize() end, { desc = 'Italicize current line' })
