@@ -94,4 +94,5 @@ function M:add_quotes_to_selection()
 
   vim.api.nvim_buf_set_lines(0, start_row, end_row, false, lines)
 end
+
 return M

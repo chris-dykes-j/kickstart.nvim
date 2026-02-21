@@ -988,3 +988,8 @@ vim.keymap.set('x', 'q', function() prose:add_quotes_to_selection() end, { desc 
 -- Auto Emdash
 local em_dash = require 'emdash'
 em_dash.setup()
+
+-- Italicize
+local italics = require 'italics'
+vim.keymap.set('n', '<C-i>', function() italics:italicize() end, { desc = 'Italicize current line' })
+vim.keymap.set('i', '<C-i>', function() italics:italicize() end, { desc = 'Italicize current line' })
