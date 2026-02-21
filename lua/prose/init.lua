@@ -50,7 +50,7 @@ local function do_the_regex_bro(line, tags)
   return new_line
 end
 
---- Add quotation marks to line.
+--- Adds quotation marks to line.
 function M:add_quotations()
   local tags = get_tags()
   if tags == nil then return end -- Not ideal, but w/e.
@@ -66,4 +66,32 @@ function M:add_quotations()
   end
 end
 
+--- Adds quotation marks to selected lines.
+function M:add_quotes_to_selection()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'x', true)
+
+  local start_pos = vim.api.nvim_buf_get_mark(0, '<')
+  local end_pos = vim.api.nvim_buf_get_mark(0, '>')
+  local start_row = start_pos[1] - 1
+  local end_row = end_pos[1]
+
+  local tags = get_tags()
+  if tags == nil then return end
+
+  local pattern = [[\v]] .. [[(\w+\s+]] .. tags .. [[)|(]] .. tags .. [[\s+\w)]]
+
+  local lines = vim.api.nvim_buf_get_lines(0, start_row, end_row, false)
+  if #lines == 0 then return end
+
+  for i, line in ipairs(lines) do
+    if vim.fn.match(line, pattern) ~= -1 then
+      lines[i] = do_the_regex_bro(line, tags)
+    elseif string.match(line, '^%s*$') then
+    else
+      lines[i] = '"' .. line .. '"'
+    end
+  end
+
+  vim.api.nvim_buf_set_lines(0, start_row, end_row, false, lines)
+end
 return M

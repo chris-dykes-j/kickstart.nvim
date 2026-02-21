@@ -983,6 +983,7 @@ vim.keymap.set('n', '<C-s>', function() harpoon:list():select(4) end)
 local prose = require 'prose'
 vim.keymap.set('n', '<C-q>', function() prose:add_quotations() end, { desc = 'Add quotation marks to current line' })
 vim.keymap.set('i', '<C-q>', function() prose:add_quotations() end, { desc = 'Add quotation marks to current line' })
+vim.keymap.set('x', 'q', function() prose:add_quotes_to_selection() end, { desc = 'Add quotation marks to the current selection line by line' })
 
 -- Auto Emdash
 local em_dash = require 'emdash'
