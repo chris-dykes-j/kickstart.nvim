@@ -837,24 +837,40 @@ require('lazy').setup({
           number = false,
         },
       },
+      plugins = {
+        twilight = { enabled = false },
+      },
       on_open = function(win)
         vim.opt.linebreak = true
         vim.cmd 'set spell spelllang=en_gb'
+        vim.keymap.set('n', 'j', 'gjzz')
+        vim.keymap.set('n', 'k', 'gkzz')
+        vim.keymap.set('n', 'G', 'Gzz')
+        vim.keymap.set('n', '<CR>', '<CR>zz')
+        vim.keymap.set('n', '<Up>', '<Up>zz')
+        vim.keymap.set('n', '<Down>', '<Down>zz')
       end,
       on_close = function()
         vim.opt.linebreak = false
         vim.cmd 'set nospell'
+        vim.keymap.set('n', 'j', 'gj')
+        vim.keymap.set('n', 'k', 'gk')
+        vim.keymap.set('n', 'G', 'G')
+        vim.keymap.set('n', '<CR>', '<CR>')
+        vim.keymap.set('n', '<Up>', '<Up>')
+        vim.keymap.set('n', '<Down>', '<Down>')
       end,
     },
   },
 
-  -- Lua
   {
     'folke/twilight.nvim',
     opts = {
       -- your configuration comes here
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
+      treesitter = true,
+      context = 14,
     },
   },
 
@@ -896,7 +912,6 @@ require('lazy').setup({
       --  Check out: https://github.com/nvim-mini/mini.nvim
     end,
   },
-
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     config = function()
@@ -1000,3 +1015,42 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.keymap.set('i', '<C-i>', function() prose.italicize:italicize() end, { desc = 'Italicize current line' })
   end,
 })
+
+-- Directions
+vim.keymap.set('n', 'j', 'gj')
+vim.keymap.set('n', 'k', 'gk')
+vim.opt.scrolloff = 999
+
+-- Markdown Header Colours
+vim.api.nvim_set_hl(0, '@markup.heading.content.1', { fg = '#91B4D5', bold = true })
+vim.api.nvim_set_hl(0, '@markup.heading.content.2', { fg = '#91B4D5', bold = true })
+vim.api.nvim_set_hl(0, '@markup.heading.content.3', { fg = '#91B4D5', bold = true })
+vim.api.nvim_set_hl(0, '@markup.heading.marker.1', { fg = '#767C9D' })
+vim.api.nvim_set_hl(0, '@markup.heading.marker.2', { fg = '#767C9D' })
+vim.api.nvim_set_hl(0, '@markup.heading.marker.3', { fg = '#767C9D' })
+
+-- Colours of Poimandres for Reference
+local variants = {
+  main = { -- main palette
+    yellow = '#FFFAC2',
+    teal1 = '#5DE4C7',
+    teal2 = '#5FB3A1',
+    teal3 = '#42675A',
+    blue1 = '#89DDFF',
+    blue2 = '#ADD7FF',
+    blue3 = '#91B4D5',
+    blue4 = '#7390AA',
+    pink1 = '#FAE4FC',
+    pink2 = '#FCC5E9',
+    pink3 = '#D0679D',
+    blueGray1 = '#A6ACCD',
+    blueGray2 = '#767C9D',
+    blueGray3 = '#506477',
+    background1 = '#303340',
+    background2 = '#1B1E28',
+    background3 = '#171922',
+    text = '#E4F0FB',
+    white = '#FFFFFF',
+    none = 'NONE',
+  },
+}
